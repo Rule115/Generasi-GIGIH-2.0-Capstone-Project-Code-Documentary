@@ -1,0 +1,38 @@
+with asi_per_kecamatan as (
+  SELECT Kecamatan as kecamatan_asi, sum(Bayi_Diberi_ASI_Ekslusif) as ASI_ekslusif, max(Kode_Kecamatan) as kode_asi
+  FROM `daring-card-345617.ASI_Ekslusif.2020`
+  group by Kecamatan
+  order by Kecamatan asc
+),
+bayi_per_kecamatan as (
+  select Kecamatan as kecamatan_bayi, max(Tahun) as Tahun, sum(Bayi_Lahir_Hidup) as bayi_lahir_hidup, max(Kode_Kecamatan) as kode_bayi
+  FROM `daring-card-345617.Bayi_lahir_hidup.2020`
+  group by Kecamatan
+  order by kecamatan asc
+),
+
+Gizi_Buruk_per_kecamatan as (
+  select Kecamatan as kecamatan_gizi, sum(Balita_Gizi_Buruk_Ditemukan__L_P_) as Gizi_buruk, max(Kode_Kecamatan) as kode_gizi
+  FROM `daring-card-345617.Gizi_Buruk.2020_1`
+  group by Kecamatan
+  order by kecamatan asc
+),
+
+bayi_rendah_per_kecamatan as (
+  select Kecamatan as kecamatan_rendah, sum(Bayi_Berat_Badan_Lahir_Rendah) as bblr, max(Kode_Kecamatan) as kode_rendah
+  FROM `daring-card-345617.Bayi_berat_badan_rendah.2020`
+  group by Kecamatan
+  order by kecamatan asc
+)
+
+select asi_per_kecamatan.kecamatan_asi, Gizi_Buruk_per_kecamatan.Gizi_buruk, bayi_per_kecamatan.Tahun, bayi_per_kecamatan.bayi_lahir_hidup, asi_per_kecamatan.ASI_ekslusif, bayi_rendah_per_kecamatan.bblr
+from bayi_per_kecamatan
+join asi_per_kecamatan
+on bayi_per_kecamatan.kode_bayi=asi_per_kecamatan.kode_asi
+join Gizi_Buruk_per_kecamatan
+on Gizi_Buruk_per_kecamatan.kode_gizi=asi_per_kecamatan.kode_asi
+join bayi_rendah_per_kecamatan
+on bayi_rendah_per_kecamatan.kode_rendah=asi_per_kecamatan.kode_asi
+order by bayi_per_kecamatan.kecamatan_bayi asc
+
+

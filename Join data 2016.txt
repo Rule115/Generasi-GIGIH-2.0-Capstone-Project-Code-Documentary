@@ -1,0 +1,8 @@
+SELECT a.kecamatan, a.Tahun, a.Bayi_Lahir_Hidup, b.Bayi_Diberi_ASI_Eksklusif, c.Balita_Gizi_Buruk_Ditemukan__L_P_, d.Bayi_Berat_Badan_Lahir_Rendah
+FROM `daring-card-345617.Bayi_lahir_hidup.2016` as a
+join `daring-card-345617.ASI_Ekslusif.2016` as b
+on a.Kode_Kecamatan=b.Kode_Kecamatan
+join `daring-card-345617.Gizi_Buruk.2016` as c
+on a.Kode_Kecamatan=c.Kode_Kecamatan
+join `daring-card-345617.Bayi_berat_badan_rendah.2016` as d
+on a.Kode_Kecamatan=d.Kode_Kecamatan
